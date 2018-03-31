@@ -1,0 +1,26 @@
+﻿Interim Project Report
+Emily Venuto, Philip Leung
+
+
+1. Pi Camera Project -- Build a Raspberry Pi-based mechanism that can capture images and videos. This mechanism must be controlled by a web interface, which will let a user decide when to take a picture, take a video, and from what angles these things will be done. The web page must display what the camera has captured, along with the angle and time at which they were taken. There must be a defined frame of reference for the Pi so that relative angles can be provided along with captures.
+
+2. Work done so far:
+* Learning Django
+* Set up web page that will display Raspberry Pi image and video recordings
+* Set up camera to work with pi (made sure image and video recording works)
+
+3. Work to be done in next three weeks:
+* Add functionality for image/video (taking pictures and video clips)
+* Design the web page
+* Control Servo movement from web page
+* Design the structure that will hold the pi camera
+* Add Apache to serve our Django application
+
+4. Contributions so far: We have both performed each piece of the current work to familiarize ourselves with our tools and how the project is set up. We have each developed a basic website using Django and set up pi cameras.
+For the next three weeks:
+* Emily
+   * Add video functionality to web page
+   * Develop control Servo movement for web page/make sure hardware works
+* Philip
+   * Add image functionality to web page
+   * Web design
