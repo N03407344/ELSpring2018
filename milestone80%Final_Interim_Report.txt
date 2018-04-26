@@ -1,0 +1,37 @@
+80% Milestone Report
+
+Emily Venuto, Philip Leung
+
+4/26/18
+
+***Remote Camera Monitoring Project***
+
+
+
+What has been accomplished:
+
+-Web Interface is complete
+
+  *can take pictures
+
+  *pictures are stored in a database
+
+  *can view this database of pictures through the web interface
+
+  *each picture is documented with its date/time of capture
+
+-Servo Motors
+
+  *servos are is wired correctly and assembled as pan/tilt
+
+  *each servo can move in one direction
+
+  *servo movement can be controlled through the web interface
+
+
+
+To do:
+
+ -servo must be able to move in any direction
+
+ (currently can only get it to move to the right, not sure why)
