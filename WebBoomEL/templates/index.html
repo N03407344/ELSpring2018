@@ -1,0 +1,40 @@
+\{% extends "layout.html" %}
+{% block title %}Take a Picture{% endblock %}
+{% block head %}
+	{{ super() }}
+
+
+{% endblock %}
+
+{% block body %}
+
+<div class="block1">
+	<p>Use the buttons to move the servo</p>
+	<table align="center" class="style1">
+		<tr>
+		<td colspan="2" style="text-align:center">
+		     <hr>
+                       <h4> PAN Angle: <a href="/pan/-"class="button">-</a> [ {{ panServoAngle }} ] <a href="/pan/+"class="button">+</a></h4>
+                     <hr>
+		</td>
+                 
+		</tr>
+		<tr>
+                <td colspan="2" style="text-align:center">
+                     <hr>
+                     <h4> TILT Angle: <a href="/tilt/-"class="button">-</a> [ {{ tiltServoAngle }} ] <a href="/tilt/+"class="button">+</a></h4>
+		     <hr>
+                 
+                 </td>
+               </tr>
+	
+	</table>	
+
+
+	<p>Click this button to capture an image!</p>
+	<a href="{{ url_for('takePic') }}">Capture an Image</a><br><br>
+	<a href="{{ url_for('showPics') }}">View Pictures taken so far</a><br><br>
+</div>
+
+{% endblock %}
+

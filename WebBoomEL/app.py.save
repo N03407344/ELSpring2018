@@ -1,0 +1,102 @@
+#!usr/bin/env python3
+import serial
+import os
+import time
+import datetime
+import picamera
+import sqlite3
+import atexit
+from flask import Flask, render_template, request, Response, url_for
+
+#This function maps the angle we want to move the servo to the needed PWM value
+def angleMap(angle):
+	return int((round((1950.0/180),0)*angle) +550)
+
+app = Flask(__name__)
+
+@app.route("/",methods=['GET','POST'])
+def main():
+    return render_template('index.html')
+
+
+#create dictionary called pins to store the pin number, name, and angle
+pins = {
+	11 : {'name' : 'pan', 'angle' : 90},
+	7 : {'name' : 'tilt', 'angle' : 90}
+}
+
+servoPan = PWM.Servo() #servo object for horizontal movement
+servoTilt = PWM.Servo() #servo object for vertical movement
+servoPan.set_servo(11, angleMap(90))
+servoTilt.set_servo(7, angleMap(90))
+#cleanup any open objects
+def cleanup():
+   servoPan.stop_servo(11)
+   servoTilt.stop_servo(7)
+
+@app.route("/<movement>")
+def move(movement):
+
+          if movement == 'left':
+                     na = pins[11]['angle'] + 10
+                     if int(na) <= 180:
+                             servoPan.set_servo(11,angleMap(na))
+                             pins[11]['angle'] = na
+                     return str(na) + ' ' + str(angleMap(na))
+          elif movement == 'right':
+                      na = pins[11]['angle'] - 10
+                      if int(na) >= 0:
+                               servoPan.ChangeDutyCycle(1.7)
+                               pins[11]['angle'] = na
+                      return str(na) + ' ' + str(angleMap(na))
+          elif movement ==  'up':
+                      na = pins[7]['angle'] + 10
+                      if int(na) <= 180:
+                               servoTilt.ChangeDutyCycle(angleMap(na))
+                               pins[7]['angle'] = na
+                      return str(na) + ' ' + str(angleMap(na))
+          elif movement == 'down':
+                      na = pins[7]['angle'] - 10
+                      if int(na) >= 0:
+                          servoTilt.ChangeDutyCycle(angleMap(na))
+                          pins[7]['angle'] = na
+                      return str(na) + ' ' + str(angleMap(na))
+          return render_template('index.html')
+@app.route("/takePic", methods=['GET','POST'])
+def takePic():
+     #connect to picture database
+     try:
+         db = sqlite3.connect('/home/pi/WebBoomEL/pics.db')
+         cursor = db.cursor()
+         currentTime=time.strftime('%x %X %Z')
+	#take new photo
+         camera = picamera.PiCamera()
+         timeTaken = time.strftime("%Y%m%d-%H%M%S")
+         pic = camera.capture('static/'+timeTaken+'.jpg')
+         camera.close()
+         picPath = timeTaken + ".jpg"
+	#store new photo in database
+         cursor.execute('''INSERT INTO pics(picPath, datetime)
+		   VALUES(?,?)''', (picPath,curretnTime))
+         db.commit()
+     except Exception as e:
+             db.rollback()
+             raise e
+     finally:
+             db.close()
+     return render_template('index.html')
+
+#method to display all pictures take so far
+@app.route("/showPics")
+def showPics():
+	#if request.method == 'POST':
+	db = sqlite3.connect('/home/pi/WebBoomEL/pics.db')
+	db.row_factory=sqlite3.Row
+	cursor = db.cursor()
+	cursor.execute('''SELECT * FROM pics''')
+	rows = cursor.fetchall()
+	db.close()
+	return render_template('showPics.html',rows = rows)
+atexit.register(cleanup)
+if __name__ == "__main__":
+	app.run(host='0.0.0.0', port=8080, debug=True)

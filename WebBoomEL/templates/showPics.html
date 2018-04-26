@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Show Pictures{% endblock %}
+{% block body %}
+
+<div class="block1">
+	<p>View all pictures taken so far.</p>
+<table>
+	{% for row in rows %}
+	  <tr>
+	<td><img src= "{{ url_for('static', filename='') }}{{ row["picPath"] }}" height="100" width="100"></td>
+		<td>{{row["datetime"]}}</td>
+	  </tr>
+	{% endfor %}
+	</table>
+</div>
+<a href="/">Return to home page</a>
+{% endblock %}
