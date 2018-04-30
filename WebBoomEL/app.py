@@ -16,14 +16,15 @@ app = Flask(__name__)
 
 global panServoAngle
 global tiltServoAngle
-panServoAngle = 90
-tiltServoAngle = 90
-panPin = 11
-tiltPin = 7
+panServoAngle = 90 #starting position for pan servo
+tiltServoAngle = 90 #starting position for tilt servo
+panPin = 11 #pin number for connecting pan servo to gpio board
+tiltPin = 7 #pin number for connecting tilt servo to gpio board
+#renders the main template for viewing
 @app.route("/",methods=['GET','POST'])
 def main():
     return render_template('index.html')
-
+#add template data for controlling the servo
 @app.route("/")
 def index():
     templateData = {
@@ -33,7 +34,7 @@ def index():
     return render_template('index.html', **templateData)
 
 
-
+#move the servos
 @app.route("/<servo>/<angle>",methods=['GET'])
 def move(servo, angle):
         global panServoAngle
@@ -55,6 +56,8 @@ def move(servo, angle):
                'tiltServoAngle'  : tiltServoAngle
         }
         return render_template('index.html', **templateData)
+
+#connects to picture database and takes the pictures
 @app.route("/takePic", methods=['GET','POST'])
 def takePic():
      #connect to picture database
@@ -63,10 +66,10 @@ def takePic():
          cursor = db.cursor()
          currentTime=time.strftime('%x %X %Z')
 	#take new photo
-         camera = picamera.PiCamera()
-         timeTaken = time.strftime("%Y%m%d-%H%M%S")
-         pic = camera.capture('static/'+timeTaken+'.jpg')
-         camera.close()
+         camera = picamera.PiCamera() #uses the pi camera 
+         timeTaken = time.strftime("%Y%m%d-%H%M%S") #stores time of picture taken
+         pic = camera.capture('static/'+timeTaken+'.jpg') #takes the picture
+         camera.close() #close the camera connection
          picPath = timeTaken + ".jpg"
 	#store new photo in database
          cursor.execute('''INSERT INTO pics(picPath, datetime)
@@ -76,7 +79,7 @@ def takePic():
              db.rollback()
              raise e
      finally:
-             db.close()
+             db.close() #close database connection
      return render_template('index.html')
 
 #method to display all pictures take so far
@@ -84,10 +87,10 @@ def takePic():
 def showPics():
 	#if request.method == 'POST':
 	db = sqlite3.connect('/home/pi/WebBoomEL/pics.db')
-	db.row_factory=sqlite3.Row
+	db.row_factory=sqlite3.Row #creates rows for pictures taken
 	cursor = db.cursor()
 	cursor.execute('''SELECT * FROM pics''')
-	rows = cursor.fetchall()
+	rows = cursor.fetchall() #fetches all rows of the query result 
 	db.close()
 	return render_template('showPics.html',rows = rows)
 

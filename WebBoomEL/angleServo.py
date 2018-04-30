@@ -5,18 +5,19 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 def setServoAngle(servo, angle):
-	assert angle >= 0 and angle <= 180
-	pwm = GPIO.PWM(servo, 50)
-	pwm.start(8)
-	duty = (angle / 18) + 3.
-	pwm.ChangeDutyCycle(dutyCycle)
-	pwm.stop()
+    assert angle >= 0 and angle <= 180
+    pwm = GPIO.PWM(servo, 50)
+    pwm.start(8)
+    duty = (angle / 18.) + 3.
+    pwm.ChangeDutyCycle(dutyCycle)
+    sleep(0.3)
+    pwm.stop()
 
 
 
 if __name__ == '__main__':
         import sys
-        servo = int(sys.argv[1])
+        servo = int(sys.argv[0])
         GPIO.setup(servo, GPIO.OUT)
-        setServoAngle(servo, int(sys.argv[2]))
+        setServoAngle(servo, int(sys.argv[1]))
         GPIO.cleanup()
