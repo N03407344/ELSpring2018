@@ -12,51 +12,41 @@ from flask import Flask, render_template, request, Response, url_for
 
 
 app = Flask(__name__)
-
-
 global panServoAngle
 global tiltServoAngle
 panServoAngle = 90 #starting position for pan servo
 tiltServoAngle = 90 #starting position for tilt servo
-panPin = 11 #pin number for connecting pan servo to gpio board
-tiltPin = 7 #pin number for connecting tilt servo to gpio board
+panPin = 17 #pin number for connecting pan servo to gpio board
+tiltPin = 4 #pin number for connecting tilt servo
 #renders the main template for viewing
 @app.route("/",methods=['GET','POST'])
 def main():
     return render_template('index.html')
-#add template data for controlling the servo
-@app.route("/")
-def index():
-    templateData = {
-               'panServoAngle'  : panServoAngle,
-               'tiltServoAngle' : tiltServoAngle
-     }
-    return render_template('index.html', **templateData)
-
 
 #move the servos
-@app.route("/<servo>/<angle>",methods=['GET'])
+@app.route("/<servo>/<angle>")
 def move(servo, angle):
         global panServoAngle
         global tiltServoAngle
         if servo == 'pan':
             if angle == '+':
-                   panServoAngle = panServoAngle + 10
+                     panServoAngle = panServoAngle + 10
+                     os.system("python3 angleServo.py " + str(panPin))
             else:
                 panServoAngle = panServoAngle - 10
-            os.system("python3 angleServo.py " + str(panPin) + " " + str(panServoAngle))
+                os.system("python3 angleServo2.py " + str(panPin))
         if servo == 'tilt':
-               if angle == '+':
-                        tiltServoAngle = tiltServoAngle + 10
-               else:
-                    tiltServoAngle = tiltServoAngle - 10
-               os.system("python3 angleServo.py " + str(tiltPin) + " " + str(tiltServoAngle))
+              if angle == '+':
+                     tiltServoAngle = tiltServoAngle + 10
+                     os.system("python3 angleServo.py " + str(tiltPin))
+              else:
+                  tiltServoAngle = tiltServoAngle - 10
+                  os.system("python3 angleServo2.py " + str(tiltPin))
         templateData = {
-               'panServoAngle'   : panServoAngle,
-               'tiltServoAngle'  : tiltServoAngle
+                    'panServoAngle' : panServoAngle,
+                    'tiltServoAngle' : tiltServoAngle
         }
-        return render_template('index.html', **templateData)
-
+        return render_template('index.html',**templateData)
 #connects to picture database and takes the pictures
 @app.route("/takePic", methods=['GET','POST'])
 def takePic():
@@ -66,7 +56,7 @@ def takePic():
          cursor = db.cursor()
          currentTime=time.strftime('%x %X %Z')
 	#take new photo
-         camera = picamera.PiCamera() #uses the pi camera 
+         camera = picamera.PiCamera() #uses the pi camera
          timeTaken = time.strftime("%Y%m%d-%H%M%S") #stores time of picture taken
          pic = camera.capture('static/'+timeTaken+'.jpg') #takes the picture
          camera.close() #close the camera connection
