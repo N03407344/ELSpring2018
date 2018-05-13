@@ -1,13 +1,19 @@
 Pi Camera Project
+
 HARDWARE Requirements:
+
 Raspberry pi 3
+
 Pi camera
+
 pan tilt servo motor setup
 ** As defined in 'app.py', the pan servo is connected to GPIO pin 17, and the tilt servo is connected to GPIO pin 4. If you chose to use another set of pins, these values must be changed in 'app.py'.
+
 SOFTWARE Setup:
 Clone git repo
 Install all system and python requirements noted in requirements.txt
 Enable the pi camera
+
 Setup: 
 cd to your working project directory
 Within working directory, create a directory called 'static' to hold the pictures that will be taken
