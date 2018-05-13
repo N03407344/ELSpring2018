@@ -15,4 +15,4 @@ SOFTWARE Setup:
         o	Within working directory, create a directory called 'static' to hold the pictures that will be taken
         o	Run 'python3 createPicTable.py' (make sure to set the path to your database as your preferred location)       
         o	Run 'python3 app.py' to host website on localhost:8080 (again, make sure to edit path for database connection)
-        o	Open your browser to localhost:8080 to view sit
+        o	Open your browser to localhost:8080 to view site
